@@ -29,6 +29,8 @@ class MainViewModel : ViewModel() {
     }
 
     fun convertButtonClick(){
-
+        val course : Double = 2.0
+        var result : Double = course*(_uiState.value.amount.toDoubleOrNull()?:0.0)
+        updateResult(result.toString())
     }
 }

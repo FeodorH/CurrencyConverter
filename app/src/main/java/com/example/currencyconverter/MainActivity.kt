@@ -59,7 +59,8 @@ fun ViewStarter(){
         onFromCurrencyChange = viewModel::updateFromCurrency,
         onAmountChange = viewModel::updateAmount,
         onToCurrencyChange = viewModel::updateToCurrency,
-        onResultChange = viewModel::updateResult)
+        onResultChange = viewModel::updateResult,
+        onClickConvertButton = viewModel::convertButtonClick)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,7 +69,8 @@ fun MainScreen(state: ConverterUiState,
                onFromCurrencyChange:(Currency)-> Unit,
                onAmountChange:(String)-> Unit,
                onToCurrencyChange: (Currency) -> Unit,
-               onResultChange: (String) -> Unit
+               onResultChange: (String) -> Unit,
+               onClickConvertButton: () -> Unit
 ) {
     var fromExpanded by remember { mutableStateOf(false) }
     var toExpanded by remember { mutableStateOf(false) }
@@ -181,7 +183,7 @@ fun MainScreen(state: ConverterUiState,
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { /* TODO: конвертация */ },
+                onClick = { onClickConvertButton() },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Convert")
@@ -213,6 +215,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 fun Preview() {
     CurrencyConverterTheme {
         MainScreen(ConverterUiState(result = "1000",error="err"),
-            {},{},{},{})
+            {},{},{},{},{})
     }
 }
