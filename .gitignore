@@ -1,0 +1,67 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+
+# Gradle wrapper (сохраняем JAR, исключаем остальное)
+gradle-wrapper.jar
+!/gradle/wrapper/gradle-wrapper.jar
+/gradle/wrapper/gradle-wrapper.properties
+
+# Безопасность и ключи
+*.jks
+*.keystore
+*.key
+*.pem
+secrets.properties
+
+# Build output (все модули)
+**/build/
+*/build/
+
+# OS files (Windows)
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.swp
+*.swo
+
+# Логи
+*.log
+*.hprof
+
+# Android Studio дополнения
+.idea/deploymentTargetSelector.xml
+.idea/inspectionProfiles/
+.idea/misc.xml
+.idea/runConfigurations/
+.idea/vcs.xml
+.idea/codeStyles/
+
+# Общие бинарники
+*.apk
+*.aab
+*.dex
+*.class
+
+# Crashlytics
+com_crashlytics_export_strings.xml
+
+# NDK (если будете использовать)
+*.so
+*.dylib
+*.dll
+
+# Kotlin
+.metals/
+.bloop/
