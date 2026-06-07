@@ -18,6 +18,9 @@ interface CurrencyAPI {
     suspend fun getRates(
         @Query("base") baseCurrency: String
     ): ExchangeRatesDto
+
+    @GET("currencies")
+    suspend fun getCurrencies(): Map<String, String>
 }
 
 object retrofitClient{

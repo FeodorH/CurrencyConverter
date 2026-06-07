@@ -16,6 +16,30 @@ class MainViewModel : ViewModel() {
     val uiState: StateFlow<ConverterUiState> = _uiState.asStateFlow()//outer
     val repository: CurrencyRepository = CurrencyRepository()
 
+    init{
+        loadCurrencies()
+    }
+
+    fun loadCurrencies(){
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            val currencyList = repository.getCurrencies()
+            if (!currencyList.isEmpty()) {
+                val fromCurrency : Currency = currencyList.find { it.code == "USD" } ?: currencyList.first()
+                val toCurrency: Currency = currencyList.find { it.code == "RUB" }
+                    ?: currencyList.getOrNull(1)
+                    ?: fromCurrency
+                _uiState.update { it.copy(availableCurrencies = currencyList,
+                    fromCurrency = fromCurrency,
+                    toCurrency = toCurrency,
+                    error = null)}
+            }else{
+                _uiState.update { it.copy(error = "Not any currencies found") }
+            }
+            _uiState.update { it.copy(isLoading = false) }
+        }
+    }
+
     fun updateFromCurrency(newCurrency: Currency){
         _uiState.update { it.copy(fromCurrency = newCurrency) }
     }
