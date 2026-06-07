@@ -61,4 +61,10 @@ dependencies {
 
     // StateFlow для Compose (понадобится для collectAsState)
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+
+    // Retrofit для сетевых запросов
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+
+    // Конвертер Gson (превращает JSON в Kotlin-объекты)
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
 }
