@@ -20,6 +20,7 @@ class MainViewModel : ViewModel() {
         loadCurrencies()
     }
 
+    //started load currencies
     fun loadCurrencies(){
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
@@ -63,7 +64,7 @@ class MainViewModel : ViewModel() {
             val toCurrency = _uiState.value.toCurrency
 
             if(fromCurrency == null || toCurrency == null){
-                _uiState.update { it.copy(error = "Set all currencies") }
+                _uiState.update { it.copy(error = "Set both currencies") }
                 return@launch
             }
 
