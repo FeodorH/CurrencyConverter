@@ -57,42 +57,39 @@ class MainViewModel : ViewModel() {
         _uiState.update { it.copy(result = newResult) }
     }
 
-    fun convertButtonClick(){
+    fun convertButtonClick() {
         viewModelScope.launch {
-            val amount : Double = _uiState.value.amount.toDoubleOrNull() ?: 0.0
-            val fromCurrency = _uiState.value.fromCurrency
-            val toCurrency = _uiState.value.toCurrency
+            val state = _uiState.value
+            val amount = state.amount.toDoubleOrNull() ?: 0.0
+            val fromCurrency = state.fromCurrency
+            val toCurrency = state.toCurrency
 
-            if(fromCurrency == null || toCurrency == null){
+            if (fromCurrency == null || toCurrency == null) {
                 _uiState.update { it.copy(error = "Set both currencies") }
                 return@launch
             }
 
             _uiState.update { it.copy(isLoading = true, error = null) }
-            android.util.Log.d("!@#", "loading...")
 
-            val course = repository.getRates(fromCurrency.code)
-            android.util.Log.d("!@#", "repo course get")
+            // Получаем курсы относительно USD (один запрос)
+            val usdRates = repository.getRates("USD")
 
-            if(!course.isEmpty()){
-                val rate = course[toCurrency.code]
-                android.util.Log.d("!@#", "rate get")
-                if(rate != null){
-                    _uiState.update { it.copy(result = (amount*rate).toString(),
-                        isLoading = false)}
-                }else{
-                    _uiState.update {
-                        it.copy(
-                            error = "Not found course for ${toCurrency.code}",
-                            isLoading = false
-                        )
-                    }
-                }
-            }else{
-                android.util.Log.d("!@#", "course else")
+            if (usdRates.isNotEmpty()) {
+                val rateFrom = usdRates[fromCurrency.code] ?: 1.0
+                val rateTo = usdRates[toCurrency.code] ?: 1.0
+                val crossRate = rateTo / rateFrom
+                val result = amount * crossRate
+
                 _uiState.update {
                     it.copy(
-                        error = "Bad internet-connection",
+                        result = result.toString(),
+                        isLoading = false
+                    )
+                }
+            } else {
+                _uiState.update {
+                    it.copy(
+                        error = "Failed to load rates. Check internet.",
                         isLoading = false
                     )
                 }

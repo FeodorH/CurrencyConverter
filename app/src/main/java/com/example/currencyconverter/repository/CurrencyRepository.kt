@@ -10,40 +10,41 @@ class CurrencyRepository {
         val timestamp: Long
     )
 
-    private data class CachedRate(
-        val data:  Map<String, Double>,
+    private data class CachedRates(// курсы относительно USD
+        val data: Map<String, Double>,
         val timestamp: Long
     )
 
     private var cachedCurrencies: CachedCurrencies? = null
-    private val cachedRates = mutableMapOf<String, CachedRate>()
+    private var cachedRatesUSD: CachedRates? = null
     private val CACHE_DURATION_CURRENCIES = 24 * 60 * 60 * 1000L  // 24 hours
     private val CACHE_DURATION_RATES = 30 * 60 * 1000L //30 minutes
 
     suspend fun getRates(base: String) : Map<String, Double>{
         val timeNow = System.currentTimeMillis()
-        val cache = cachedRates[base]
-        if(cache != null||(timeNow - cachedRates[base]!!.timestamp) > CACHE_DURATION_RATES){
-            val result = try {
-                val response = retrofitClient.api.getRates(base)
-                response.rates
-            }catch (e: Exception){
+
+        val cached = cachedRatesUSD
+        if (cached != null && (timeNow - cached.timestamp) < CACHE_DURATION_RATES) {
+            return cached.data
+        } else {
+            return try {
+                val response = retrofitClient.api.getRates("USD")
+                val rates = response.rates
+                cachedRatesUSD = CachedRates(rates, timeNow)
+                rates
+            } catch (e: Exception) {
                 android.util.Log.d("!@#", "repo get rates exception!")
-                cache?.data?: emptyMap<String, Double>()
+                cached?.data ?: emptyMap()
             }
-            val newCache = CachedRate(result, timeNow)
-            cachedRates.put(base,newCache)
-            return result
-        }else{
-            return cache!!.data
         }
     }
 
     suspend fun getCurrencies(): List<Currency>{
         val timeNow = System.currentTimeMillis()
-        if(cachedCurrencies != null && (timeNow - cachedCurrencies!!.timestamp) > CACHE_DURATION_CURRENCIES){
-            return cachedCurrencies!!.data
-        }else{
+        val cached = cachedCurrencies
+        if(cached != null && (timeNow - cached.timestamp) < CACHE_DURATION_CURRENCIES){
+            return cached.data
+        } else{
             val result = try {
                 val currenciesMap = retrofitClient.api.getCurrencies()
 
