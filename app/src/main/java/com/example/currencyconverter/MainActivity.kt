@@ -18,7 +18,9 @@ import com.example.currencyconverter.ui.theme.CurrencyConverterTheme
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -86,6 +88,7 @@ fun MainScreen(state: ConverterUiState,
             .fillMaxSize()
             .padding(innerPadding)
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
         ) {
             Text(
                 text = "Currency from:",

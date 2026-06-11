@@ -69,6 +69,10 @@ class MainViewModel : ViewModel() {
                 return@launch
             }
 
+            if(fromCurrency == toCurrency){
+                _uiState.update { it.copy(result = amount.toString()) }
+            }
+
             _uiState.update { it.copy(isLoading = true, error = null) }
 
             // Получаем курсы относительно USD (один запрос)
