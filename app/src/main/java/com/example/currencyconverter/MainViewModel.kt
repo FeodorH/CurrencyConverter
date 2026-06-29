@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.currencyconverter.model.ConverterUiState
 import com.example.currencyconverter.model.Currency
 import com.example.currencyconverter.repository.CurrencyRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ConverterUiState())//inner
@@ -24,7 +26,9 @@ class MainViewModel : ViewModel() {
     fun loadCurrencies(){
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            val currencyList = repository.getCurrencies()
+            val currencyList = withContext(Dispatchers.IO){
+                repository.getCurrencies()
+            }
             if (!currencyList.isEmpty()) {
                 val fromCurrency : Currency = currencyList.find { it.code == "USD" } ?: currencyList.first()
                 val toCurrency: Currency = currencyList.find { it.code == "RUB" }
@@ -76,7 +80,9 @@ class MainViewModel : ViewModel() {
             _uiState.update { it.copy(isLoading = true, error = null) }
 
             // Получаем курсы относительно USD (один запрос)
-            val usdRates = repository.getRates("USD")
+            val usdRates = withContext(Dispatchers.IO){
+                repository.getRates("USD")
+            }
 
             if (usdRates.isNotEmpty()) {
                 val rateFrom = usdRates[fromCurrency.code] ?: 1.0
