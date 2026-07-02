@@ -13,10 +13,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    val repository: RepositoryDI = CurrencyRepository()
+) : ViewModel() {
     private val _uiState = MutableStateFlow(ConverterUiState())//inner
     val uiState: StateFlow<ConverterUiState> = _uiState.asStateFlow()//outer
-    val repository: CurrencyRepository = CurrencyRepository()
 
     init{
         loadCurrencies()
@@ -26,9 +27,7 @@ class MainViewModel : ViewModel() {
     fun loadCurrencies(){
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            val currencyList = withContext(Dispatchers.IO){
-                repository.getCurrencies()
-            }
+            val currencyList = repository.getCurrencies()
             if (!currencyList.isEmpty()) {
                 val fromCurrency : Currency = currencyList.find { it.code == "USD" } ?: currencyList.first()
                 val toCurrency: Currency = currencyList.find { it.code == "RUB" }
@@ -68,6 +67,8 @@ class MainViewModel : ViewModel() {
             val fromCurrency = state.fromCurrency
             val toCurrency = state.toCurrency
 
+            if (_uiState.value.isLoading) return@launch//if this coroutine already run
+
             if (fromCurrency == null || toCurrency == null) {
                 _uiState.update { it.copy(error = "Set both currencies") }
                 return@launch
@@ -75,14 +76,13 @@ class MainViewModel : ViewModel() {
 
             if(fromCurrency == toCurrency){
                 _uiState.update { it.copy(result = amount.toString()) }
+                return@launch
             }
 
             _uiState.update { it.copy(isLoading = true, error = null) }
 
-            // Получаем курсы относительно USD (один запрос)
-            val usdRates = withContext(Dispatchers.IO){
-                repository.getRates("USD")
-            }
+            // Query to USD(always)
+            val usdRates = repository.getRates("USD")
 
             if (usdRates.isNotEmpty()) {
                 val rateFrom = usdRates[fromCurrency.code] ?: 1.0
@@ -106,4 +106,9 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+}
+
+interface RepositoryDI{
+    suspend fun getRates(base: String) : Map<String, Double>
+    suspend fun getCurrencies(): List<Currency>
 }

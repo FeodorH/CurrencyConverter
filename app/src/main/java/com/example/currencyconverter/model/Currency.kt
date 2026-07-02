@@ -5,12 +5,6 @@ data class Currency(
     val name: String,
 )
 
-//class for json -> object
-data class ExchangeRatesDto(
-    val base: String,
-    val rates: Map<String, Double>
-)
-
 data class ConverterUiState(
     val amount: String = "",
     val fromCurrency: Currency = Currency("USD", "USD"),
@@ -22,4 +16,20 @@ data class ConverterUiState(
         Currency("USD", "USD"), Currency("EUR", "EUR"),
         Currency("RUB", "RUB"), Currency("GBP", "GBP")
     )
+)
+
+data class CachedCurrencies(
+    val data: List<Currency>,
+    val timestamp: Long
+)
+
+data class CachedRates(// rates respecting USD
+    val data: Map<String, Double>,
+    val timestamp: Long
+)
+
+data class ExchangeRatesDto(
+    val base: String,
+    val date: String,
+    val rates: Map<String, Double>
 )

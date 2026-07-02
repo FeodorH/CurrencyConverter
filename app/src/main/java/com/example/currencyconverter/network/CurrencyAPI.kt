@@ -1,17 +1,12 @@
 package com.example.currencyconverter.network
 
+import com.example.currencyconverter.model.ExchangeRatesDto
+import com.example.currencyconverter.repository.NetworkOfCurrencies
 import com.google.gson.Gson
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-
-// DTO - object for json data
-data class ExchangeRatesDto(
-    val base: String,          // "USD"
-    val date: String,          // "2024-06-06"
-    val rates: Map<String, Double> // {"RUB": 89.5, "EUR": 0.92}
-)
 
 interface CurrencyAPI {
     @GET("latest")
@@ -23,7 +18,7 @@ interface CurrencyAPI {
     suspend fun getCurrencies(): Map<String, String>
 }
 
-object retrofitClient{
+object retrofitClient : NetworkOfCurrencies{
     private const val BASE_URL = "https://api.frankfurter.app/"
 
     private val retrofit: Retrofit by lazy {
@@ -32,8 +27,12 @@ object retrofitClient{
             .build()
     }
 
-    val api: CurrencyAPI by lazy {
+    private val api: CurrencyAPI by lazy {
         retrofit.create(CurrencyAPI::class.java)
     }
+
+    override suspend fun getRates(base : String) : ExchangeRatesDto = api.getRates(base)
+
+    override suspend fun getCurrencies() : Map<String, String> = api.getCurrencies()
 }
 
