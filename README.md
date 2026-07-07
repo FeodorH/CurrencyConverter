@@ -1,6 +1,8 @@
 CurrencyConverter — Android app for currency conversion
 A simple and reliable currency converter with up-to-date exchange rates, written in Kotlin using Jetpack Compose and MVVM architecture.
 
+![Architecture scheme](/images/CurrencyConverterScheme.png)
+
 🚀 Key features
 Conversion between any supported currencies (160+ currencies)
 
