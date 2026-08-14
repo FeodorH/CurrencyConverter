@@ -1,75 +1,71 @@
-CurrencyConverter — Android app for currency conversion
-A simple and reliable currency converter with up-to-date exchange rates, written in Kotlin using Jetpack Compose and MVVM architecture.
+# CurrencyConverter 
+## Android-приложение для конвертации валют
 
-🚀 Key features
-Conversion between any supported currencies (160+ currencies)
+Простой и надёжный конвертер валют с актуальными курсами, написанный на **Kotlin** с использованием **Jetpack Compose** и **MVVM**-архитектуры.
 
-Up-to-date exchange rates from the Frankfurter API (updated every 30 minutes)
+---
 
-Cache exchange rates to save data and provide offline access (outdated data)
+## 🚀 Возможности
 
-The currency list is loaded from the API and is always up-to-date.
-Loading indicator and network error handling
+- Конвертация между любыми поддерживаемыми валютами (более 160 валют)
+- Актуальные курсы от **Frankfurter API** (обновление каждые 30 минут)
+- Кэширование курсов — экономия трафика и работа с устаревшими данными офлайн
+- Список валют загружается из API — всегда актуальный
+- Индикатор загрузки и обработка ошибок сети
 
-🏗️ Architecture and technologies
-Stack
-Language: Kotlin
+---
 
-UI: Jetpack Compose (Material 3)
+## 🏗️ Архитектура и технологии
 
-Asynchronous: Coroutines + Flow
+| Компонент | Технология |
+|-----------|------------|
+| **Язык** | Kotlin |
+| **UI** | Jetpack Compose (Material 3) |
+| **Асинхронность** | Coroutines + Flow (StateFlow) |
+| **Сеть** | Retrofit + Gson |
+| **Архитектура** | MVVM (ViewModel + StateFlow) |
+| **DI** | Ручное внедрение через конструктор |
 
-Network: Retrofit + Gson
+### Ключевые архитектурные решения
 
-Architecture: MVVM (ViewModel + StateFlow)
+- **Единая базовая валюта (USD)** — все курсы запрашиваются относительно USD, затем вычисляется кросс-курс. Это гарантирует стабильность и избегает проблем с нестабильными ответами API для редких валют.
+- **Кэширование курсов и списка валют** — снижает количество сетевых запросов и обеспечивает частичную работу офлайн.
+- **Неизменяемое состояние (Immutable UI State)** — всё состояние экрана хранится в `data class ConverterUiState` и обновляется через `copy()`.
 
-DI: manual injection via constructor
+---
 
-Key architectural solutions
-Single base currency (USD) - all rates are requested relative to USD, then the cross-rate is calculated. This guarantees stability and avoids problems with unstable API responses for rare currencies.
+## 🧩 Структура проекта
 
-Caching of rates and currency list - reduces the number of network requests and ensures operation with poor internet.
+app/src/main/java/.../currencyconverter/\
+├── MainActivity.kt # Точка входа, Compose UI\
+├── MainViewModel.kt # Бизнес-логика, состояние\
+├── model/Currency.kt # Модели данных (Currency, ConverterUiState)\
+├── network/CurrencyApi.kt # Retrofit интерфейс, DTO\
+├── repository/CurrencyRepository.kt # Работа с данными (кэш + сеть)\
+└── ui/theme/ # Тема приложения
 
-Immutable UI State - all screen state is stored in the data class ConverterUiState, updated via copy().
+---
 
-🧩 Project structure
-text
-app/src/main/java/.../currencyconverter/
+## 🔄 Поток данных (MVVM)
 
-├── MainActivity.kt           # Entry point, Compose UI
+1. Пользователь вводит сумму, выбирает валюты → UI вызывает методы ViewModel
+2. ViewModel обновляет `ConverterUiState` через `update`
+3. При нажатии кнопки **Convert** запускается корутина
+4. Репозиторий возвращает кэшированные (или свежие) курсы относительно USD
+5. ViewModel вычисляет результат через кросс-курс и обновляет состояние
+6. UI автоматически перерисовывается
 
-├── MainViewModel.kt          # Business logic, state
+---
 
-├── model/Currency.kt         # Data models (Currency, ConverterUiState)
+## 📦 Зависимости
 
-├── network/CurrencyApi.kt    # Retrofit interface, DTO
+- Retrofit 2.11.0
+- Coroutines 1.7.3
+- Lifecycle ViewModel Compose 2.8.7
+- Compose BOM 2024.11.00
 
-├── repository/CurrencyRepository.kt  # Data handling (cache + network)
+---
 
-└── ui/theme/                 # App theme
-🔄 Data flow (MVVM)
-User enters amount, selects currencies → UI calls ViewModel methods
+## 📄 Лицензия
 
-ViewModel updates ConverterUiState via update
-
-When "Convert" button is clicked, coroutine is started
-
-Repository returns cached (or fresh) rates relative to USD
-
-ViewModel calculates result via cross-rate and updates state
-
-UI is automatically redrawn
-
-📦 Dependencies
-Retrofit 2.11.0
-
-Coroutines 1.7.3
-
-Lifecycle ViewModel Compose 2.8.7
-
-Compose BOM 2024.11.00
-
-📄 License
-Educational project. Free to use and modify.
-
-The idea of the project is to show an architecturally clean approach to developing Android applications with an up-to-date technology stack.
+Учебный проект. Свободно используется и модифицируется.

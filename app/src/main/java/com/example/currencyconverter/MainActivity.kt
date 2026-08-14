@@ -227,11 +227,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, device = "id:pixel_8", showSystemUi = true)
 @Composable
 fun Preview() {
     CurrencyConverterTheme {
-        MainScreen(ConverterUiState(result = "1000",error="err", isLoading = true),
+        MainScreen(ConverterUiState(toCurrency = Currency("CAD","CAD"),amount = "100",result = "142.23", isLoading = false),
             {},{},{},{},{})
     }
 }

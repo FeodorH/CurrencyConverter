@@ -2,7 +2,6 @@ package com.example.currencyconverter.network
 
 import com.example.currencyconverter.model.ExchangeRatesDto
 import com.example.currencyconverter.repository.NetworkOfCurrencies
-import com.google.gson.Gson
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
