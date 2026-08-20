@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -28,9 +30,12 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -81,6 +86,14 @@ fun MainScreen(state: ConverterUiState,
     var toExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {Text("CurrencyConverter")},
+                actions = {
+                    dropdownMenu()
+                }
+            )
+        },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         Column(
@@ -220,11 +233,32 @@ fun MainScreen(state: ConverterUiState,
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun dropdownMenu(){
+    var opened : Boolean by remember { mutableStateOf(false) }
+    Box{
+        IconButton(onClick = {opened = !opened}) {
+            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+        }
+
+        DropdownMenu(
+            expanded = opened,
+            onDismissRequest = {opened = false}
+        ) {
+            DropdownMenuItem(
+                text = { Text("Settings") },
+                onClick = {
+
+                }
+            )
+            DropdownMenuItem(
+                text = { Text("Info") },
+                onClick = {
+
+                }
+            )
+        }
+    }
+
 }
 
 @Preview(showBackground = true, device = "id:pixel_8", showSystemUi = true)
