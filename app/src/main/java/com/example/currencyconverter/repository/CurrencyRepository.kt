@@ -1,16 +1,14 @@
 package com.example.currencyconverter.repository
 
-import com.example.currencyconverter.RepositoryDI
+import com.example.currencyconverter.view_model.RepositoryDI
 import com.example.currencyconverter.cache.CurrencyCache
 import com.example.currencyconverter.model.CachedCurrencies
 import com.example.currencyconverter.model.CachedRates
 import com.example.currencyconverter.model.Currency
 import com.example.currencyconverter.model.ExchangeRatesDto
-import com.example.currencyconverter.network.CurrencyAPI
 import com.example.currencyconverter.network.retrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlin.math.abs
 
 class CurrencyRepository(
     val cache: CacheOfCurrencies = CurrencyCache(),

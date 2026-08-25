@@ -1,17 +1,15 @@
-package com.example.currencyconverter
+package com.example.currencyconverter.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.currencyconverter.model.ConverterUiState
 import com.example.currencyconverter.model.Currency
 import com.example.currencyconverter.repository.CurrencyRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainViewModel(
     val repository: RepositoryDI = CurrencyRepository()

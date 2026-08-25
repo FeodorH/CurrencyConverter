@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -40,6 +41,8 @@ android {
 }
 
 dependencies {
+    val nav_version = "2.9.8"
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -67,4 +70,12 @@ dependencies {
 
     // Конвертер Gson (превращает JSON в Kotlin-объекты)
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+
+    // Jetpack Compose Navigation
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+    // Testing Navigation
+    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
 }
