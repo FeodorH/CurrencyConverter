@@ -35,15 +35,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.currencyconverter.model.ConverterUiState
 import com.example.currencyconverter.model.Currency
 import com.example.currencyconverter.navigation.InfoScreen
 import com.example.currencyconverter.navigation.SettingsScreen
+import com.example.currencyconverter.ui.theme.CurrencyConverterTheme
 import com.example.currencyconverter.view_model.MainViewModel
+
 
 @Composable
 fun MainScreenStarter(navController: NavController) {
@@ -63,7 +67,7 @@ fun MainScreenStarter(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(
+private fun MainScreen(
     navController: NavController,
     state: ConverterUiState,
     onFromCurrencyChange: (Currency) -> Unit,
@@ -225,7 +229,7 @@ fun MainScreen(
 }
 
 @Composable
-fun DropdownMenu(navController: NavController) {
+private fun DropdownMenu(navController: NavController) {
     var opened: Boolean by remember { mutableStateOf(false) }
     Box {
         IconButton(onClick = { opened = !opened }) {
@@ -250,5 +254,19 @@ fun DropdownMenu(navController: NavController) {
             )
         }
     }
+}
 
+@Preview(showBackground = true, device = "id:pixel_8", showSystemUi = true)
+@Composable
+private fun Preview() {
+    CurrencyConverterTheme {
+        MainScreen(rememberNavController(),
+            ConverterUiState(
+                toCurrency = Currency("CAD", "CAD"),
+                amount = "100",
+                result = "142.23",
+                isLoading = true
+            ),
+            {}, {}, {}, {}, {})
+    }
 }

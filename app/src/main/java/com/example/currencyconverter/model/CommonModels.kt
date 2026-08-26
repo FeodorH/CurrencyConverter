@@ -5,19 +5,6 @@ data class Currency(
     val name: String,
 )
 
-data class ConverterUiState(
-    val amount: String = "",
-    val fromCurrency: Currency = Currency("USD", "USD"),
-    val toCurrency: Currency = Currency("RUB", "RUB"),
-    val result: String = "",
-    val isLoading: Boolean = false,
-    val error: String? = null,
-    val availableCurrencies: List<Currency> = listOf(
-        Currency("USD", "USD"), Currency("EUR", "EUR"),
-        Currency("RUB", "RUB"), Currency("GBP", "GBP")
-    )
-)
-
 data class CachedCurrencies(
     val data: List<Currency>,
     val timestamp: Long
